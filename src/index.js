@@ -37,6 +37,10 @@ app.post('/turn', (req, res) => {
         return res.sendStatus(400);
     }
 
+    if (board.isCellSelected(x, y)) {
+        return res.sendStatus(403);
+    }
+
     board.takeTurn(x, y);
 
     if (isGameOver()) {
