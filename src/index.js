@@ -1,4 +1,5 @@
 const readline = require('readline-sync');
+const tictactoe = require('./tictactoe');
 
 var board = [[]];
 
@@ -7,11 +8,11 @@ main();
 function main() {
     do {
         console.log("Welcome to QC Coders' Tic TacToe! You're 'X' and you'll go first.");
-        initBoard();
+        board = tictactoe.getNewBoard();
     
         do {
             console.log("\nHere's the current board:\n");
-            printBoard();
+            tictactoe.printBoard(board);
 
             var input = readline.question("\nEnter your choice in the format 'x,y' (zero based, left to right, top to bottom): ");        
             let x, y;
@@ -37,87 +38,19 @@ function main() {
             }
         
             board[y][x] = 'X';
-            if (getWinner() !== null) break;
+            if (tictactoe.getWinner(board) !== null) break;
 
             console.log("\nComputer is taking its turn...");
-            doComputersTurn();
-        } while (getWinner() === null);
+            tictactoe.doComputersTurn(board);
+        } while (tictactoe.getWinner(board) === null);
 
-        if (getWinner() === 'Z') {
+        if (tictactoe.getWinner(board) === 'Z') {
             console.log("\nThe game was a draw!");
         } else {
-            console.log("\n" + (getWinner() === 'X' ? "You're" : "The computer is") + " the winner!");
+            console.log("\n" + (tictactoe.getWinner(board) === 'X' ? "You're" : "The computer is") + " the winner!");
         }
 
         console.log("Here's the final board:\n");
-        printBoard();
+        tictactoe.printBoard(board);
     } while (readline.question("\nPress Enter to play again or x + Enter to exit.") === "");
 };
-
-function doComputersTurn() {
-    let availableCells = getAvailableCells();
-    let randomCell = availableCells[Math.floor(Math.random() * Math.floor(availableCells.length))];
-    board[randomCell[1]][randomCell[0]] = 'O';
-}
-
-function getAvailableCells() {
-    let availableCells = [];
-
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3; j++) {
-            if (board[j][i] == ' ') {
-                availableCells.push([ i, j ]);
-            }
-        }
-    }
-
-    return availableCells;
-}
-
-function getWinner() {
-    let combos = [
-        [[0, 0], [0, 1], [0, 2]],
-        [[1, 0], [1, 1], [1, 2]],
-        [[2, 0], [2, 1], [2, 2]],
-        [[0, 0], [1, 0], [2, 0]],
-        [[0, 1], [1, 1], [2, 1]],
-        [[0, 2], [1, 2], [2, 2]],
-        [[0, 0], [1, 1], [2, 2]],
-        [[2, 0], [1, 1], [0, 2]],
-    ];
-
-    for (i = 0; i < 8; i++) {
-        let combo = [];
-
-        for (j = 0; j < 3; j++) {
-            combo[j] = board[combos[i][j][1]][combos[i][j][0]];
-        }
-
-        if (combo[0] != ' ' && combo[0] == combo[1] && combo[1] == combo[2])
-        {
-            return combo[0];
-        }
-    }
-
-    return getAvailableCells().length == 0 ? 'Z' : null;
-}
-
-function printBoard() {
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3; j++) {
-            process.stdout.write(board[i][j] + (j < 2 ? "|" : "\n"));
-        }
-
-        if (i < 2) {
-            console.log("-+-+-");
-        }
-    }
-}
-
-function initBoard() {
-    board = [
-        [ ' ', ' ', ' '],
-        [ ' ', ' ', ' '],
-        [ ' ', ' ', ' '],
-    ];
-}
