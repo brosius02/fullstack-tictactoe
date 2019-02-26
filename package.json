@@ -1,0 +1,31 @@
+{
+  "name": "fullstack-tictactoe",
+  "version": "1.0.0",
+  "description": "A full stack, client/server implementation of Tic Tac Toe in JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qccoders/fullstack-tictactoe.git"
+  },
+  "keywords": [
+    "tic",
+    "tac",
+    "toe",
+    "javascript",
+    "full",
+    "stack"
+  ],
+  "author": "QC Coders",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qccoders/fullstack-tictactoe/issues"
+  },
+  "homepage": "https://github.com/qccoders/fullstack-tictactoe#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.9"
+  }
+}
