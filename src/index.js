@@ -1,54 +1,50 @@
-const readline = require('readline-sync');
+const express = require('express');
 const Board = require('./tictactoe');
 
-main();
+const app = express();
+app.use(express.json());
 
-function main() {
-    do {
-        console.log("Welcome to QC Coders' Tic TacToe! You're 'X' and you'll go first.");
-        board = new Board();
+const port = 3000;
+
+var board = new Board();
+
+isGameOver = () => board.getWinner() !== null;
+
+getGameState = () => ({ 
+    gameOver: isGameOver(), 
+    winner: board.getWinner(), 
+    cells: board.cells,
+});
+
+app.get('/game', (req, res) => {
+    res.send(getGameState());
+});
+
+app.post('/game', (req, res) => { 
+    board = new Board();
+    res.send(getGameState());
+});
+
+app.post('/turn', (req, res) => {
+    if (isGameOver()) {
+        return res.sendStatus(409);
+    }
     
-        do {
-            console.log("\nHere's the current board:\n");
-            board.print();
+    let { x, y } = req.body;
 
-            var input = readline.question("\nEnter your choice in the format 'x,y' (zero based, left to right, top to bottom): ");        
-            let x, y;
-        
-            try {
-                let nums = input.split(",");
-        
-                x = parseInt(nums[0]);
-                y = parseInt(nums[1]);
-       
-                if (isNaN(x) || isNaN(y) || x < 0 || x > 2 || y < 0 || y > 2)
-                {
-                    throw "\nInvalid input! Try again.";
-                }
-            } catch(err) {
-                console.log(err);
-                continue;
-            }
-            
-            if (board.isCellSelected(x, y)) {
-                console.log("\nThat cell is already selected.");
-                continue;
-            }
-        
-            board.takeTurn(x, y);
-            if (board.getWinner() !== null) break;
+    if (isNaN(x) || isNaN(y) || x < 0 || x > 2 || y < 0 || y > 2)
+    {
+        return res.sendStatus(400);
+    }
 
-            console.log("\nComputer is taking its turn...");
-            board.takeComputersTurn();
-        } while (board.getWinner() === null);
+    board.takeTurn(x, y);
 
-        if (board.getWinner() === 'Z') {
-            console.log("\nThe game was a draw!");
-        } else {
-            console.log("\n" + (board.getWinner() === 'X' ? "You're" : "The computer is") + " the winner!");
-        }
+    if (isGameOver()) {
+        return res.send(getGameState());
+    }
 
-        console.log("Here's the final board:\n");
-        board.print();
-    } while (readline.question("\nPress Enter to play again or x + Enter to exit.") === "");
-};
+    board.takeComputersTurn();
+    res.send(getGameState());
+});
+
+app.listen(port, () => console.log(`Tic Tac Toe app listening on port ${port}!`));

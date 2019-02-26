@@ -26,6 +26,6 @@
   },
   "homepage": "https://github.com/qccoders/fullstack-tictactoe#readme",
   "dependencies": {
-    "readline-sync": "^1.4.9"
+    "express": "^4.16.4"
   }
 }
