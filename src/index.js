@@ -1,18 +1,16 @@
 const readline = require('readline-sync');
-const tictactoe = require('./tictactoe');
-
-var board = [[]];
+const Board = require('./tictactoe');
 
 main();
 
 function main() {
     do {
         console.log("Welcome to QC Coders' Tic TacToe! You're 'X' and you'll go first.");
-        board = tictactoe.getNewBoard();
+        board = new Board();
     
         do {
             console.log("\nHere's the current board:\n");
-            tictactoe.printBoard(board);
+            board.print();
 
             var input = readline.question("\nEnter your choice in the format 'x,y' (zero based, left to right, top to bottom): ");        
             let x, y;
@@ -32,25 +30,25 @@ function main() {
                 continue;
             }
             
-            if (board[y][x] !== ' ') {
+            if (board.isCellSelected(x, y)) {
                 console.log("\nThat cell is already selected.");
                 continue;
             }
         
-            board[y][x] = 'X';
-            if (tictactoe.getWinner(board) !== null) break;
+            board.takeTurn(x, y);
+            if (board.getWinner() !== null) break;
 
             console.log("\nComputer is taking its turn...");
-            tictactoe.doComputersTurn(board);
-        } while (tictactoe.getWinner(board) === null);
+            board.takeComputersTurn();
+        } while (board.getWinner() === null);
 
-        if (tictactoe.getWinner(board) === 'Z') {
+        if (board.getWinner() === 'Z') {
             console.log("\nThe game was a draw!");
         } else {
-            console.log("\n" + (tictactoe.getWinner(board) === 'X' ? "You're" : "The computer is") + " the winner!");
+            console.log("\n" + (board.getWinner() === 'X' ? "You're" : "The computer is") + " the winner!");
         }
 
         console.log("Here's the final board:\n");
-        tictactoe.printBoard(board);
+        board.print();
     } while (readline.question("\nPress Enter to play again or x + Enter to exit.") === "");
 };
