@@ -1,24 +1,30 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './TicTacToe.css';
 
 import Cell from './Cell';
 
-const initialState = {
-    board: [
-        [ ' ', ' ', ' '],
-        [ ' ', ' ', ' '],
-        [ ' ', ' ', ' '],
-    ],
-}
+const url = "http://localhost:3001";
 
 class Board extends Component {
-    state = initialState;
+    state = { board: [] };
+
+    componentDidMount = () => {
+        axios.post(url + "/game")
+        .then(response => {
+            this.setState({ board: response.data.cells });
+        }, err => {
+            console.log(err);
+        })
+    }
 
     handleCellClick = (x, y) => {
-        var oldState = [...this.state.board];
-        oldState[x][y] = 'X';
-
-        this.setState({ board: oldState });
+        axios.post(url + "/turn", { x: x, y: y })
+        .then(response => {
+            this.setState({ board: response.data.cells });
+        }, err => {
+            console.log(err);
+        })
     } 
 
     render() {
@@ -26,9 +32,9 @@ class Board extends Component {
 
         return (
             <div className="board">
-                {board.map((row, x) => 
-                    <div key={x}>
-                        {row.map((cell, y) => 
+                {board.map((row, y) => 
+                    <div key={y}>
+                        {row.map((cell, x) => 
                             <Cell 
                                 key={x+y}
                                 onClick={() => this.handleCellClick(x, y)} 
