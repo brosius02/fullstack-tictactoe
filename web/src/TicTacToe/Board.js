@@ -51,8 +51,37 @@ class Board extends Component {
         }
     }
 
+    getWinningCombo = (cells) => {
+        if (cells === undefined || cells.length === 0) return undefined;
+
+        let combos = [
+            [[0, 0], [0, 1], [0, 2]],
+            [[1, 0], [1, 1], [1, 2]],
+            [[2, 0], [2, 1], [2, 2]],
+            [[0, 0], [1, 0], [2, 0]],
+            [[0, 1], [1, 1], [2, 1]],
+            [[0, 2], [1, 2], [2, 2]],
+            [[0, 0], [1, 1], [2, 2]],
+            [[2, 0], [1, 1], [0, 2]],
+        ];
+    
+        for (var i = 0; i < 8; i++) {
+            let combo = [];
+    
+            for (var j = 0; j < 3; j++) {
+                combo[j] = cells[combos[i][j][1]][combos[i][j][0]];
+            }
+    
+            if (combo[0] !== ' ' && combo[0] === combo[1] && combo[1] === combo[2])
+            {
+                return combos[i];
+            }
+        }
+    }
+
     render() {
         let { cells, gameOver, winner } = this.state;
+        let winningCombo = this.getWinningCombo(cells);
 
         return (
             <div>
@@ -65,6 +94,7 @@ class Board extends Component {
                                     onClick={() => this.handleCellClick(x, y)} 
                                     x={x} 
                                     y={y} 
+                                    color={winningCombo && winningCombo.find(cell => cell[0] === x && cell[1] === y) ? "green" : gameOver ? "grey" : ""}
                                     value={cell}
                                 />
                             )}
