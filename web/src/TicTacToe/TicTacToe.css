@@ -34,3 +34,11 @@
     text-align: center;
     display: inherit;
 }
+
+.green {
+    background-color: greenyellow;
+}
+
+.grey {
+    background-color: grey;
+}
