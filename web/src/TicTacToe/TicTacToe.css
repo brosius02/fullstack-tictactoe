@@ -11,12 +11,24 @@
 
 .board {
     border: 1px solid #000;
+    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     display: table;
 }
 
 .status {
+    font-size: 16pt;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: inherit;
+}
+
+.reset {
+    font-size: 16pt;
+    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
