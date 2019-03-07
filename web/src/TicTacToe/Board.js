@@ -9,13 +9,17 @@ const url = "http://localhost:3001";
 class Board extends Component {
     state = { cells: [], gameOver: false, winner: null };
 
-    componentDidMount = () => {
+    reset = () => {
         axios.post(url + "/game")
         .then(response => {
             this.setState(response.data);
         }, err => {
             console.log(err);
         })
+    }
+
+    componentDidMount = () => {
+        this.reset();
     }
 
     handleCellClick = (x, y) => {
@@ -25,6 +29,12 @@ class Board extends Component {
         }, err => {
             console.log(err);
         })
+    }
+
+    handleResetClick = () => {
+        if (this.state.gameOver || window.confirm('Are you sure you want to reset?')) {
+            this.reset();
+        }
     }
     
     getGameStatus = (gameOver, winner) => {
@@ -62,6 +72,7 @@ class Board extends Component {
                     )}
                 </div>
                 <span className="status" style={{ color: gameOver ? "grey" : "green" }}>{this.getGameStatus(gameOver, winner)}</span>
+                <button className="reset" onClick={this.handleResetClick}>Reset Game</button>
             </div>
         )
     }
